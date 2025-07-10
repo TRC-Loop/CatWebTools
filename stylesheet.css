@@ -19,7 +19,6 @@ body {
 header {
   background: var(--primary);
   color: white;
-  padding: 2rem 1rem;
   text-align: center;
 }
 

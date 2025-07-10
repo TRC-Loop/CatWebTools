@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bookmark Generator - CatWeb Tools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Bookmark Generator</h1>
+      <div class="description">
+        Generate a custom bookmark URL for <code>bookmarks.rbx</code> integration.
+      </div>
+    </header>
+
+    <main>
+      <form id="bookmark-form" onsubmit="return false;">
+        <div class="form-group">
+          <label>
+            Ref
+            <span
+              class="tooltip"
+              data-tooltip="The internal name under which the bookmark is saved. Used for editing."
+            ><i class="fas fa-question-circle"></i
+              ></span>
+          </label>
+          <input type="text" id="ref" required autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+          <label>
+            Link
+            <span
+              class="tooltip"
+              data-tooltip="The URL where the bookmark will point to."
+            ><i class="fas fa-question-circle"></i
+              ></span>
+          </label>
+          <input type="text" id="link" required autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+          <label>
+            Icon
+            <span
+              class="tooltip"
+              data-tooltip=""
+            ><i class="fas fa-question-circle"></i
+              ></span>
+            <a
+              href="https://create.roblox.com/store/decals"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="icon-info-link"
+            >Roblox Decals</a
+            >
+          </label>
+          <input type="text" id="icon" required autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+          <label>
+            Return
+            <span
+              class="tooltip"
+              data-tooltip="Where to return the user after the bookmark is added."
+            ><i class="fas fa-question-circle"></i
+              ></span>
+          </label>
+          <input type="text" id="return" required autocomplete="off" />
+        </div>
+      </form>
+      <button id="add-demo-btn" type="button" style="margin-top: 10px;">
+        Add Demo Data
+      </button>
+
+      <div class="output" id="output" style="display: none;">
+        <a href="#" target="_blank" id="generated-link" rel="noopener noreferrer"></a>
+        <button class="copy-btn" id="copy-btn" title="Copy to clipboard">
+          <i class="fas fa-copy"></i> Copy
+        </button>
+      </div>
+    </main>
+
+    <footer>
+      This site is open source.
+      <a href="https://github.com/TRC-Loop/CatWebTools" target="_blank"
+      >Improve this page</a
+      >. This page is not affiliated with Catweb. | Version: 0.0.0 (WIP)
+    </footer>
+
+    <script>
+    const refInput = document.getElementById('ref');
+    const linkInput = document.getElementById('link');
+    const iconInput = document.getElementById('icon');
+    const returnInput = document.getElementById('return');
+
+    const output = document.getElementById('output');
+    const generatedLink = document.getElementById('generated-link');
+    const copyBtn = document.getElementById('copy-btn');
+
+    function ensureRbxExtension(str) {
+    return str.endsWith('.rbx') ? str : str + '.rbx';
+    }
+
+    function generateUrl() {
+    const ref = encodeURIComponent(refInput.value.trim());
+    const link = encodeURIComponent(linkInput.value.trim());
+    const icon = encodeURIComponent(iconInput.value.trim());
+    const ret = encodeURIComponent(returnInput.value.trim());
+
+    if (!ref || !link || !icon || !ret) {
+    output.style.display = 'none';
+    return;
+    }
+
+    const baseUrl = 'bookmarks.rbx';
+
+    const url = `${baseUrl}?ref=${ref}&link=${link}&icon=${icon}&return=${ret}`;
+    generatedLink.href = url;
+    generatedLink.textContent = url;
+    output.style.display = 'flex';
+    }
+
+    [refInput, linkInput, iconInput, returnInput].forEach((input) =>
+    input.addEventListener('input', generateUrl)
+    );
+
+    copyBtn.addEventListener('click', () => {
+    if (generatedLink.href) {
+    navigator.clipboard
+    .writeText(generatedLink.href)
+    .then(() => {
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => {
+    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+    }, 1500);
+    })
+    .catch(() => {
+    copyBtn.textContent = 'Failed to copy';
+    setTimeout(() => {
+    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+    }, 1500);
+    });
+    }
+    });
+
+
+    const addDemoBtn = document.getElementById('add-demo-btn');
+
+    addDemoBtn.addEventListener('click', () => {
+    refInput.value = 'Shorten';
+    linkInput.value = 'shorten.rbx';
+    iconInput.value = '137622359687923';
+    returnInput.value = 'shorten.rbx/bm';
+
+    generateUrl();
+    });
+    window.addEventListener('load', generateUrl);
+    </script>
+  </body>
+</html>

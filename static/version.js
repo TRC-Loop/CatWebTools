@@ -1,2 +1,2 @@
-const version = '0.0.9-Beta';
+const version = '0.0.10-Beta';
 document.currentScript.insertAdjacentHTML('beforebegin', version);

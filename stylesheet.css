@@ -267,3 +267,53 @@ input[type="text"] {
 .copy-btn:hover {
   background: #16a085;
 }
+
+.commit-container {
+  display: flex;
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+#commit-list {
+  flex: 1 1 40%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-right: 1px solid var(--secondary);
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+#commit-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--background);
+}
+
+#commit-details {
+  flex: 1 1 55%;
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: none;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+#commit-details h2, 
+#commit-details p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+#commit-details a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+#commit-details a:hover {
+  text-decoration: underline;
+}

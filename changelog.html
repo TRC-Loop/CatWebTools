@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>CatWeb Tools - Changelog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="./static/images/favicon.ico">
+    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  </head>
+  <body>
+    <header>
+      <div style="display: flex; align-items: center; gap: 10px; text-align: center; justify-content: center;">
+        <img src="./static/images/catwebtoolsimg.webp" width="92" alt="CatWeb Tools Logo">
+        <h1>CatWeb Tools</h1>
+      </div>
+      <div class="description">Changelog – Latest GitHub Commits</div>
+      <a href="https://github.com/TRC-Loop/CatWebTools" target="_blank" rel="noopener">
+        <img src="https://img.shields.io/github/last-commit/TRC-Loop/CatWebTools?label=last%20update&style=for-the-badge" style="margin-bottom: 8px;" alt="Last Update">
+      </a>
+    </header>
+
+    <main>
+      <div class="commit-container">
+        <ul id="commit-list"></ul>
+        <section id="commit-details">
+          <h2 id="detail-title"></h2>
+          <p><strong>Author:</strong> <span id="detail-author"></span></p>
+          <p><strong>Date:</strong> <span id="detail-date"></span></p>
+          <p id="detail-message"></p>
+          <a id="detail-link" href="#" target="_blank" rel="noopener">View on GitHub</a>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      This site is open source. <a href="https://github.com/TRC-Loop/CatWebTools" target="_blank">Improve this page</a>. This page is not affiliated with Catweb. | Version: <script src="./static/version.js"></script> <a href="changelog" target="_blank"> View Changelog</a>.
+    </footer>
+
+    <script>
+    const owner = 'TRC-Loop';
+    const repo = 'CatWebTools';
+
+    async function fetchCommits() {
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits`);
+    const data = await res.json();
+    const list = document.getElementById('commit-list');
+    list.innerHTML = '';
+
+    data.forEach(commit => {
+    const li = document.createElement('li');
+    li.style.padding = "8px 0";
+
+    const shortSha = commit.sha.slice(0, 7);
+    const msg = commit.commit.message.split('\n')[0];
+
+    const a = document.createElement('a');
+    a.href = '#';
+    a.innerHTML = `<i class="fas fa-code-branch"></i> <strong>${shortSha}</strong>: ${msg}`;
+    a.addEventListener('click', (e) => {
+    e.preventDefault();
+    showDetails(commit);
+    });
+
+    li.appendChild(a);
+    list.appendChild(li);
+    });
+    }
+
+    function showDetails(commit) {
+    document.getElementById('detail-title').textContent = commit.sha.slice(0, 7);
+    document.getElementById('detail-author').textContent = commit.commit.author.name;
+    document.getElementById('detail-date').textContent = new Date(commit.commit.author.date).toLocaleString();
+    document.getElementById('detail-message').textContent = commit.commit.message;
+    document.getElementById('detail-link').href = commit.html_url;
+    document.getElementById('commit-details').style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchCommits);
+    </script>
+  </body>
+</html>

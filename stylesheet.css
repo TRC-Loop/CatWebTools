@@ -33,6 +33,10 @@ main {
   margin: 0 auto;
 }
 
+a {
+  cursor: pointer;
+}
+
 .description {
   font-size: 1.2rem;
   margin-bottom: 2rem;

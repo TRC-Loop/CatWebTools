@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,13 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   </head>
   <body>
-
     <header>
-
-<div style="display: flex; align-items: center; gap: 10px; text-align: center; justify-content: center;">
-  <img src="./static/images/catwebtoolsimg.webp" width="92" alt="CatWeb Tools Logo">
-  <h1>CatWeb Tools</h1>
-</div>
+      <div style="display: flex; align-items: center; gap: 10px; text-align: center; justify-content: center;">
+        <img src="./static/images/catwebtoolsimg.webp" width="92" alt="CatWeb Tools Logo">
+        <h1>CatWeb Tools</h1>
+      </div>
       <div class="description">
         Some tools for making Catweb Development easier.
       </div>
@@ -25,9 +24,16 @@
     </header>
 
     <main>
-
       <div class="card-grid">
 
+        <!-- CatWeb Game Stats -->
+        <a href="https://www.roblox.com/de/games/16855862021/CatWeb-Make-a-Website" class="card" id="catweb-card">
+          <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+          <h3>CatWeb Game Stats</h3>
+          <p id="catweb-stats">Loading...</p>
+        </a>
+
+        <!-- Minify JSON -->
         <a href="json-minify" class="card">
           <div class="card-icon"><i class="fas fa-bug-slash"></i></div>
           <h3>Minify JSON</h3>
@@ -40,6 +46,7 @@
           <div class="card-author">Idea by: TRCLoop</div>
         </a>
 
+        <!-- Webeditor -->
         <a href="editor" class="card">
           <div class="card-icon"><i class="fas fa-pen-nib"></i></div>
           <h3>Webeditor</h3>
@@ -53,6 +60,7 @@
           <div class="card-author">Idea by: TheROcraft</div>
         </a>
 
+        <!-- Anti-Censor Generator -->
         <a href="anti-censor-gen" class="card">
           <div class="card-icon"><i class="fas fa-link-slash"></i></div>
           <h3>Anti-Censor Generator</h3>
@@ -65,6 +73,7 @@
           <div class="card-author">Idea by: TRCLoop</div>
         </a>
 
+        <!-- Bookmark Generator -->
         <a href="bookmarks-gen" class="card">
           <div class="card-icon"><i class="fas fa-bookmark"></i></div>
           <h3>Bookmark Generator</h3>
@@ -78,7 +87,7 @@
           <div class="card-author">Bookmarks by: Creeperpug (pugwares)</div>
         </a>
 
-
+        <!-- LynxScript Editor -->
         <div class="card" onclick="location.href='lynx-script-editor'" style="cursor: pointer;">
           <div class="card-icon"><i class="fas fa-file-code"></i></div>
           <h3><a href="lynx-script-editor">LynxScript Editor/Compiler</a></h3>
@@ -101,8 +110,40 @@
     </main>
 
     <footer>
-      This site is open source. <a href="https://github.com/TRC-Loop/CatWebTools" target="_blank">Improve this page</a>. This page is not affiliated with Catweb. | Version: <script src="./static/version.js"></script> <a href="changelog" target="_blank"> View Changelog</a>.
+      This site is open source. 
+      <a href="https://github.com/TRC-Loop/CatWebTools" target="_blank">Improve this page</a>. 
+      This page is not affiliated with Catweb. | 
+      Version: <script src="./static/version.js"></script> 
+      <a href="changelog" target="_blank"> View Changelog</a>.
     </footer>
 
+    <script>
+      async function loadCatWebStats() {
+        const statsEl = document.getElementById('catweb-stats');
+        try {
+          const res = await fetch('https://games.roproxy.com/v1/games?universeIds=5791970028');
+          const data = await res.json();
+          const game = data.data[0];
+
+          const active = game.playing;
+          const visits = game.visits.toLocaleString('en-US');
+          const updated = new Date(game.updated).toLocaleString('en-US', {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+          });
+
+          statsEl.innerHTML = `
+            <i class="fas fa-user-group"></i> Active: <strong>${active}</strong><br>
+            <i class="fas fa-eye"></i> Visits: <strong>${visits}</strong><br>
+            <i class="fas fa-clock"></i> Updated: <strong>${updated}</strong>
+          `;
+        } catch (err) {
+          statsEl.textContent = 'Failed to load game stats.';
+          console.error('Error loading stats:', err);
+        }
+      }
+
+      loadCatWebStats();
+    </script>
   </body>
 </html>

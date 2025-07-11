@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nexpay Generator - CatWeb Tools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="./static/images/favicon.ico" />
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Nexpay Generator</h1>
+      <div class="description">
+        Create custom Nexpay checkout URLs for your products.
+      </div>
+    </header>
+
+    <main>
+      <form id="nexpay-form" onsubmit="return false;">
+        <div class="form-group">
+          <label>
+            Background Color
+            <span
+              class="tooltip"
+              data-tooltip="The HEX color code for the background of the image (e.g., #RRGGBB)."
+              ><i class="fas fa-question-circle"></i
+            ></span>
+          </label>
+          <input type="color" id="dblockcol" required />
+        </div>
+
+        <div class="form-group">
+          <label>
+            Product Image
+            <span
+              class="tooltip"
+              data-tooltip="A Roblox Decal (Object) ID for your product image."
+              ><i class="fas fa-question-circle"></i
+            ></span>
+            <a
+              href="https://create.roblox.com/store/decals"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="icon-info-link"
+              >Roblox Decals</a
+            >
+          </label>
+          <input type="text" id="dimage" required autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+          <label>
+            Product Title
+            <span
+              class="tooltip"
+              data-tooltip="The main title displayed for your product."
+              ><i class="fas fa-question-circle"></i
+            ></span>
+          </label>
+          <input type="text" id="ftitletxt" required autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+          <label>
+            Product Price (in Robux)
+            <span
+              class="tooltip"
+              data-tooltip="The price of your product."
+              ><i class="fas fa-question-circle"></i
+            ></span>
+          </label>
+          <input
+            type="number"
+            id="fpricetxt"
+            required
+            autocomplete="off"
+            min="0"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>
+            Product Type
+            <span
+              class="tooltip"
+              data-tooltip="The type of Roblox item being purchased (GamePass, Product, Asset)."
+              ><i class="fas fa-question-circle"></i
+            ></span>
+          </label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="ftypepr" value="GamePass" required />
+              GamePass
+            </label>
+            <label>
+              <input type="radio" name="ftypepr" value="Product" />
+              Product
+            </label>
+            <label>
+              <input type="radio" name="ftypepr" value="Asset" />
+              Asset
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>
+            Product ID
+            <span
+              class="tooltip"
+              data-tooltip="The ID of the GamePass, Product, or Asset to purchase."
+              ><i class="fas fa-question-circle"></i
+            ></span>
+          </label>
+          <input type="text" id="fidpr" required autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+          <label>
+            Success URL
+            <span
+              class="tooltip"
+              data-tooltip="The URL where the user is redirected after a successful payment."
+              ><i class="fas fa-question-circle"></i
+            ></span>
+          </label>
+          <input type="text" id="fresuc" required autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+          <label>
+            Cancellation URL
+            <span
+              class="tooltip"
+              data-tooltip="The URL where the user is redirected if the payment is canceled."
+              ><i class="fas fa-question-circle"></i
+            ></span>
+          </label>
+          <input type="text" id="frecan" required autocomplete="off" />
+        </div>
+      </form>
+      <button id="add-demo-btn" type="button" style="margin-top: 10px">
+        Add Demo Data
+      </button>
+
+      <div class="output" id="output" style="display: none">
+        <a
+          href="#"
+          target="_blank"
+          id="generated-link"
+          rel="noopener noreferrer"
+        ></a>
+      </div>
+
+      <button class="copy-btn" id="copy-btn" title="Copy to clipboard">
+        <i class="fas fa-copy"></i> Copy
+      </button>
+    </main>
+
+    <footer>
+      This site is open source.
+      <a href="https://github.com/TRC-Loop/CatWebTools" target="_blank"
+        >Improve this page</a
+      >. This page is not affiliated with Nexpay. | Version:
+      <script src="./static/version.js"></script>
+      <a href="changelog" target="_blank"> View Changelog</a>.
+    </footer>
+
+    <script>
+      const dblockcolInput = document.getElementById('dblockcol');
+      const dimageInput = document.getElementById('dimage');
+      const ftitletxtInput = document.getElementById('ftitletxt');
+      const fpricetxtInput = document.getElementById('fpricetxt');
+      const ftypeprInputs = document.querySelectorAll('input[name="ftypepr"]');
+      const fidprInput = document.getElementById('fidpr');
+      const fresucInput = document.getElementById('fresuc');
+      const frecanInput = document.getElementById('frecan');
+
+      const output = document.getElementById('output');
+      const generatedLink = document.getElementById('generated-link');
+      const copyBtn = document.getElementById('copy-btn');
+
+      function generateUrl() {
+        const dblockcol = encodeURIComponent(
+          dblockcolInput.value.replace('#', ''),
+        );
+        const dimage = encodeURIComponent(dimageInput.value.trim());
+        const ftitletxt = encodeURIComponent(ftitletxtInput.value.trim());
+        const fpricetxt = encodeURIComponent(fpricetxtInput.value.trim());
+        let ftypepr = '';
+        ftypeprInputs.forEach((radio) => {
+          if (radio.checked) {
+            ftypepr = encodeURIComponent(radio.value);
+          }
+        });
+        const fidpr = encodeURIComponent(fidprInput.value.trim());
+        const fresuc = encodeURIComponent(fresucInput.value.trim());
+        const frecan = encodeURIComponent(frecanInput.value.trim());
+
+        if (
+          !dblockcol ||
+          !dimage ||
+          !ftitletxt ||
+          !fpricetxt ||
+          !ftypepr ||
+          !fidpr ||
+          !fresuc ||
+          !frecan
+        ) {
+          output.style.display = 'none';
+          return;
+        }
+
+        const baseUrl = 'nexpay.rbx/checkouts';
+
+        const url = `${baseUrl}?dblockcol=${dblockcol}&dimage=${dimage}&ftitletxt=${ftitletxt}&fpricetxt=${fpricetxt}&ftypepr=${ftypepr}&fidpr=${fidpr}&fresuc=${fresuc}&frecan=${frecan}`;
+        generatedLink.href = url;
+        generatedLink.textContent = url;
+        output.style.display = 'flex';
+      }
+
+      [
+        dblockcolInput,
+        dimageInput,
+        ftitletxtInput,
+        fpricetxtInput,
+        fidprInput,
+        fresucInput,
+        frecanInput,
+      ].forEach((input) => input.addEventListener('input', generateUrl));
+
+      ftypeprInputs.forEach((radio) =>
+        radio.addEventListener('change', generateUrl),
+      );
+
+      copyBtn.addEventListener('click', () => {
+        if (generatedLink.href) {
+          navigator.clipboard
+            .writeText(generatedLink.href)
+            .then(() => {
+              copyBtn.textContent = 'Copied!';
+              setTimeout(() => {
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+              }, 1500);
+            })
+            .catch(() => {
+              copyBtn.textContent = 'Failed to copy';
+              setTimeout(() => {
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+              }, 1500);
+            });
+        }
+      });
+
+      const addDemoBtn = document.getElementById('add-demo-btn');
+
+      addDemoBtn.addEventListener('click', () => {
+        dblockcolInput.value = '#007bff';
+        dimageInput.value = '1234567890';
+        ftitletxtInput.value = 'Awesome GamePass';
+        fpricetxtInput.value = '499';
+        document.querySelector('input[value="GamePass"]').checked = true;
+        fidprInput.value = '9876543210';
+        fresucInput.value = 'https://yourwebsite.com/success';
+        frecanInput.value = 'https://yourwebsite.com/cancel';
+
+        generateUrl();
+      });
+      window.addEventListener('load', generateUrl);
+    </script>
+  </body>
+</html>

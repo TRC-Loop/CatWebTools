@@ -167,8 +167,8 @@
     const game = data.data[0];
 
     const active = game.playing;
-    const visits = game.visits.toLocaleString('en-US');
-    const updated = new Date(game.updated).toLocaleString('en-US', {
+    const visits = game.visits.toLocaleString();
+    const updated = new Date(game.updated).toLocaleString({
     dateStyle: 'medium',
     timeStyle: 'short'
     });

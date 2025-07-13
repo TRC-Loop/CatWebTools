@@ -14,9 +14,9 @@ Hosted on [GitHub Pages](https://trc-loop.github.io/CatWebTools), with future pl
 
 ---
 
-## 🧰 Tools Overview
+## Tools Overview
 
-### 📌 Bookmark Generator
+### Bookmark Generator
 **`bookmarks-gen.html`**  
 Generate links that add your Catweb site to a user's `bookmarks.rbx`.  
 **Tags:** `RBX-Link`, `API`, `URL-Parameters`  
@@ -24,7 +24,7 @@ Generate links that add your Catweb site to a user's `bookmarks.rbx`.
 
 ---
 
-### 🐞 Minify JSON *(WIP)*
+### Minify JSON *(WIP)*
 **`json-minify.html`**  
 Fix and minify JSON data for importing elements into Catweb.  
 **Tags:** `JSON`, `Fix`  
@@ -32,7 +32,7 @@ Fix and minify JSON data for importing elements into Catweb.
 
 ---
 
-### ✍️ Webeditor *(WIP)*
+### Webeditor *(WIP)*
 **`editor.html`**  
 An advanced page and script editor with JSON export capability.  
 **Tags:** `Editor`, `JSON-Export`, `Web`  
@@ -40,7 +40,7 @@ An advanced page and script editor with JSON export capability.
 
 ---
 
-### 🕵️ Anti-Censor Generator *(WIP)*
+### Anti-Censor Generator *(WIP)*
 **`anti-censor-gen.html`**  
 Generate obfuscated variables to bypass text filters/censorship.  
 **Tags:** `JSON-Export`, `Obfuscation`  
@@ -48,7 +48,7 @@ Generate obfuscated variables to bypass text filters/censorship.
 
 ---
 
-### 🔧 LynxScript Editor/Compiler *(WIP)*
+### LynxScript Editor/Compiler *(WIP)*
 **`lynx-script-editor.html`**  
 Editor and compiler for [LynxScript](https://github.com/pickaxe828/LynxScript), the scripting language for Catweb.  
 Includes integration with Discord for updates and support.  
@@ -59,7 +59,7 @@ Includes integration with Discord for updates and support.
 
 ---
 
-## 🚀 Hosting
+## Hosting
 
 Currently live at:  
 📍 [https://trc-loop.github.io/CatWebTools](https://trc-loop.github.io/CatWebTools)
@@ -68,7 +68,7 @@ Plans for a custom domain are under consideration.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome and appreciated!
 
@@ -88,12 +88,3 @@ Issues and suggestions are also welcome via [GitHub Issues](https://github.com/T
 
 CatWebTools is an independent project and is **not affiliated with Catweb** or its developers.  
 All tools are community-made and experimental.
-
----
-
-## 🔖 Version
-
-The site dynamically loads the current version via [`static/version.js`](./static/version.js).  
-Version info is displayed in the footer of every page.
-
----

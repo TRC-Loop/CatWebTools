@@ -159,56 +159,80 @@
     </footer>
 
     <script>
-    async function loadCatWebStats() {
-    const statsEl = document.getElementById('catweb-stats');
-    try {
+let lastFetched = null;
+let agoInterval;
+
+async function loadCatWebStats() {
+  const statsEl = document.getElementById('catweb-stats');
+  try {
     const res = await fetch('https://games.roproxy.com/v1/games?universeIds=5791970028');
     const data = await res.json();
     const game = data.data[0];
 
     const active = game.playing;
     const visits = game.visits.toLocaleString();
-    const updated = new Date(game.updated).toLocaleString({
-    dateStyle: 'medium',
-    timeStyle: 'short'
-    });
+    lastFetched = new Date(game.updated);
 
     statsEl.innerHTML = `
-    <i class="fas fa-user-group"></i> Active: <strong>${active}</strong><br>
-    <i class="fas fa-eye"></i> Visits: <strong>${visits}</strong><br>
-    <i class="fas fa-clock"></i> Updated: <strong>${updated}</strong>
+      <i class="fas fa-user-group"></i> Active: <strong>${active}</strong><br>
+      <i class="fas fa-eye"></i> Visits: <strong>${visits}</strong><br>
+      <i class="fas fa-clock"></i> Updated: <strong>${lastFetched.toLocaleString({
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      })}</strong><br>
+      <i class="fas fa-history"></i> <span id="ago-text">just now</span>
     `;
-    } catch (err) {
+
+    // Clear any previous timer
+    clearInterval(agoInterval);
+    startAgoTimer();
+  } catch (err) {
     statsEl.textContent = 'Failed to load game stats.';
     console.error('Error loading stats:', err);
-    }
-    }
+  }
+}
 
-    loadCatWebStats();
-    document.querySelectorAll('.card').forEach((card) => {
-    const maxTilt = 16; 
+function timeSince(date) {
+  const seconds = Math.floor((new Date() - date) / 1000);
+  if (seconds < 60) return `${seconds}s ago`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
 
-    card.addEventListener('mousemove', (e) => {
+function startAgoTimer() {
+  const agoTextEl = document.getElementById('ago-text');
+  agoInterval = setInterval(() => {
+    if (lastFetched) agoTextEl.textContent = timeSince(lastFetched);
+  }, 1000); // every second
+}
+
+// Kick it off & auto-refresh
+loadCatWebStats();
+setInterval(loadCatWebStats, 60000); // every minute
+
+// Your existing tilt code below…
+document.querySelectorAll('.card').forEach(card => {
+  const maxTilt = 16;
+  card.addEventListener('mousemove', e => {
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const deltaX = x - centerX;
-    const deltaY = y - centerY;
-    const percentX = deltaX / centerX;
-    const percentY = deltaY / centerY;
-
+    const percentX = (x - centerX) / centerX;
+    const percentY = (y - centerY) / centerY;
     const rotateY = -percentX * maxTilt;
     const rotateX = percentY * maxTilt;
-
     card.style.transform = `translateY(-8px) scale(1.02) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    });
-
-    card.addEventListener('mouseleave', () => {
-    card.style.transform = `translateY(-8px) scale(1.02) rotateX(0deg) rotateY(0deg)`;
-    });
-    });
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'translateY(-8px) scale(1.02) rotateX(0deg) rotateY(0deg)';
+  });
+});
     </script>
   </body>
 </html>

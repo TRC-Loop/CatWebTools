@@ -222,11 +222,11 @@ function startAgoTimer() {
   const agoTextEl = document.getElementById('ago-text');
   agoInterval = setInterval(() => {
     if (lastFetched) agoTextEl.textContent = "Last fetched: " + timeSince(lastFetched);
-  }, 1000); // every second
+  }, 1000);
 }
 
 loadCatWebStats();
-setInterval(loadCatWebStats, 60000); // every minute
+setInterval(loadCatWebStats, 60000);
 
 document.querySelectorAll('.card').forEach(card => {
   const maxTilt = 16;

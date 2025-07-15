@@ -181,7 +181,7 @@ let agoInterval;
 async function loadCatWebStats() {
   const statsEl = document.getElementById('catweb-stats');
   try {
-    const res = await fetch('https://content-harley-quitism-a9a8acb3.koyeb.app/games/v1/games?universeIds=5791970028/');
+    const res = await fetch('https://content-harley-quitism-a9a8acb3.koyeb.app/games/v1/games?universeIds=5791970028');
     const data = await res.json();
     const game = data.data[0];
 

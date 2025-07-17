@@ -406,3 +406,24 @@ button:hover {
 .icon-button:hover {
     transform: scale(1.1);
 }
+
+.large-input {
+    width: 40vw;
+    height: 40vh;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+    font-family: inherit;
+}
+
+#formatting-buttons {
+    margin-bottom: 10px;
+}
+
+#formatting-buttons > * {
+    display: inline-flex;
+    height: 40px;
+    width: 40px;
+    align-items: center;
+    justify-content: center;
+}

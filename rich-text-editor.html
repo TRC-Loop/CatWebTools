@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Custom Blocks - CatWeb Tools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="./static/images/favicon.ico"
+    />
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Rich Text Editor</h1>
+      <div class="description">
+        Simple WYSIWYG Editor, for editing the html in TextLabels.
+        (where Rich is turned on.)
+      </div>
+    </header>
+    <main>
+      <div id="formatting-buttons">
+        <button id="bold-button" title="Bold">
+          <i class="fa-solid fa-bold"></i>
+        </button>
+        <button id="italic-button" title="Italic">
+          <i class="fa-solid fa-italic"></i>
+        </button>
+        <button id="underline-button" title="Underline">
+          <i class="fa-solid fa-underline"></i>
+        </button>
+        <button id="strikethrough-button" title="Strikethrough">
+          <i class="fa-solid fa-strikethrough"></i>
+        </button>
+        <button id="color-button" title="Color">
+          <i class="fa-solid fa-palette"></i>
+        </button>
+        <button id="text-size-button" title="Text Size">
+          <i class="fa-solid fa-text-height"></i>
+        </button>
+        <button id="comment-button" title="Comment">
+          <i class="fa-solid fa-comment"></i>
+        </button>
+        <button id="highlight-button" title="Highlight">
+          <i class="fa-solid fa-highlighter"></i>
+        </button>
+        <button id="font-weight-button" title="Font Weight">
+          <i class="fa-solid fa-weight-hanging"></i>
+        </button>
+        <button id="font-change-button" title="Font Change">
+          <i class="fa-solid fa-a"></i>
+        </button>
+        <button id="font-transparency-button" title="Font Transparency">
+          <i class="fa-solid fa-eye-slash"></i>
+        </button>
+        <button id="font-outline-button" title="Font Outline">
+          <i class="fa-solid fa-border-top-left"></i>
+        </button>
+      </div>
+      <textarea
+        type="text"
+        placeholder="Text here..."
+        class="large-input"
+        id="editor"
+      ></textarea>
+      <div id="preview" aria-label="Preview of formatted text"></div>
+    </main>
+    
+    <!-- Notice added above footer -->
+    <div style="color: grey; font-size: 14px; margin: 10px 0; padding: 10px; text-align: center;">
+      In order for this to work, make sure 'Rich' is enabled on your Text.
+      <a href="https://create.roblox.com/docs/ui/rich-text" target="_blank" style="color: #0066cc; text-decoration: underline;">Learn more</a>
+    </div>
+    
+    <footer>
+      This site is open source.
+      <a href="https://github.com/TRC-Loop/CatWebTools" target="_blank"
+      >Improve this page</a
+      >. This page is not affiliated with Catweb. | Version:
+      <script src="./static/version.js"></script>
+      <a href="changelog" target="_blank"> View Changelog</a>.
+    </footer>
+    
+    <script>
+    (() => {
+    const editor = document.getElementById("editor");
+    const preview = document.getElementById("preview");
+    
+    // Roblox Rich Text tags map
+    const richTextTags = {
+    bold: ["<b>", "</b>"],
+    italic: ["<i>", "</i>"],
+    underline: ["<u>", "</u>"],
+    strikethrough: ["<s>", "</s>"],
+    color: (color) => [`<font color="${color}">`, "</font>"],
+    textSize: (size) => [`<size=${size}>`, "</size>"],
+    comment: [`<!--`, "-->"],
+    highlight: (color) => [
+    `<mark color="${color}">`,
+    "</mark>",
+    ],
+    fontWeight: (weight) => [
+    `<font weight="${weight}">`,
+    "</font>",
+    ],
+    fontChange: (font) => [
+    `<font family="${font}">`,
+    "</font>",
+    ],
+    fontTransparency: (transparency) => [
+    `<font transparency="${transparency}">`,
+    "</font>",
+    ],
+    fontOutline: (color) => [
+    `<stroke color="${color}">`,
+    "</stroke>",
+    ],
+    };
+    
+    function wrapSelectionWith(tagStart, tagEnd) {
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    
+    if (start === end) {
+    alert("Please select some text to format.");
+    return;
+    }
+    
+    const selectedText = editor.value.substring(start, end);
+    const before = editor.value.substring(0, start);
+    const after = editor.value.substring(end);
+    
+    editor.value =
+    before + tagStart + selectedText + tagEnd + after;
+    
+    // Reset selection to inside the tags to allow chaining formatting
+    editor.selectionStart = start + tagStart.length;
+    editor.selectionEnd = end + tagStart.length;
+    
+    editor.focus();
+    updatePreview();
+    }
+    
+    // Helpers for prompts for parameters or default values
+    function promptColor(defaultColor = "#ff0000") {
+    const color = prompt(
+    "Enter a color name or hex code (e.g. red or #ff0000):",
+    defaultColor
+    );
+    return color ? color.trim() : null;
+    }
+    
+    function promptSize(defaultSize = "18") {
+    let size = prompt(
+    "Enter text size (number, e.g. 18):",
+    defaultSize
+    );
+    if (size) {
+    size = size.trim();
+    if (!/^\d+$/.test(size)) {
+    alert("Please enter a valid numeric size.");
+    return null;
+    }
+    }
+    return size;
+    }
+    
+    function promptText(defaultText = "") {
+    return prompt("Enter comment text:", defaultText);
+    }
+    
+    function promptTransparency(defaultAlpha = "0.5") {
+    let alpha = prompt(
+    "Enter transparency (0 to 1):",
+    defaultAlpha
+    );
+    if (alpha) {
+    alpha = alpha.trim();
+    if (!/^(0(\.\d+)?|1(\.0+)?)$/.test(alpha)) {
+    alert(
+    "Please enter a valid transparency between 0 and 1."
+    );
+    return null;
+    }
+    }
+    return alpha;
+    }
+    
+    // On button clicks, apply relevant tags
+    document.getElementById("bold-button").onclick = () =>
+    wrapSelectionWith("<b>", "</b>");
+    document.getElementById("italic-button").onclick = () =>
+    wrapSelectionWith("<i>", "</i>");
+    document.getElementById("underline-button").onclick = () =>
+    wrapSelectionWith("<u>", "</u>");
+    document.getElementById("strikethrough-button").onclick = () =>
+    wrapSelectionWith("<s>", "</s>");
+    document.getElementById("comment-button").onclick = () =>
+    wrapSelectionWith("<!--", "-->");
+    
+    document.getElementById("color-button").onclick = () => {
+    const color = promptColor();
+    if (color) {
+    const [start, end] = richTextTags.color(color);
+    wrapSelectionWith(start, end);
+    }
+    };
+    
+    document.getElementById("text-size-button").onclick = () => {
+    const size = promptSize();
+    if (size) {
+    const [start, end] = richTextTags.textSize(size);
+    wrapSelectionWith(start, end);
+    }
+    };
+    
+    document.getElementById("highlight-button").onclick = () => {
+    const color = promptColor("#ffff00"); // default yellow highlight
+    if (color) {
+    const [start, end] = richTextTags.highlight(color);
+    wrapSelectionWith(start, end);
+    }
+    };
+    
+    document.getElementById("font-weight-button").onclick = () => {
+    const weight = prompt(
+    "Enter font weight (normal, bold, etc.):",
+    "bold"
+    );
+    if (weight) {
+    const [start, end] = richTextTags.fontWeight(weight);
+    wrapSelectionWith(start, end);
+    }
+    };
+    
+    document.getElementById("font-change-button").onclick = () => {
+    const font = prompt(
+    "Enter font face (e.g. Arial, SourceSans):",
+    "Arial"
+    );
+    if (font) {
+    const [start, end] = richTextTags.fontChange(font);
+    wrapSelectionWith(start, end);
+    }
+    };
+    
+    document.getElementById("font-transparency-button").onclick =
+    () => {
+    const alpha = promptTransparency();
+    if (alpha !== null) {
+    const [start, end] =
+    richTextTags.fontTransparency(alpha);
+    wrapSelectionWith(start, end);
+    }
+    };
+    
+    document.getElementById("font-outline-button").onclick = () => {
+    const color = promptColor("#000000");
+    if (color) {
+    const [start, end] = richTextTags.fontOutline(color);
+    wrapSelectionWith(start, end);
+    }
+    };
+    
+    // Update preview by converting Roblox rich text markup to HTML for demonstration
+    // Note: Roblox rich text and HTML differ; this is a rough converter for preview only.
+    function convertRobloxToHTML(text) {
+    // Escape HTML special chars first
+    let safeText = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+    
+    // Convert basic tags
+    safeText = safeText
+    .replace(/&lt;b&gt;/gi, "<strong>")
+    .replace(/&lt;\/b&gt;/gi, "</strong>")
+    .replace(/&lt;i&gt;/gi, "<em>")
+    .replace(/&lt;\/i&gt;/gi, "</em>")
+    .replace(/&lt;u&gt;/gi, "<u>")
+    .replace(/&lt;\/u&gt;/gi, "</u>")
+    .replace(/&lt;s&gt;/gi, "<s>")
+    .replace(/&lt;\/s&gt;/gi, "</s>");
+    
+    // Convert <font color="...">...</font>
+    safeText = safeText.replace(
+    /&lt;font color="([^"]+)"&gt;/gi,
+    '<span style="color:$1">'
+    );
+    // Convert <font family="...">...</font>
+    safeText = safeText.replace(
+    /&lt;font family="([^"]+)"&gt;/gi,
+    "<span style=\"font-family:'$1', sans-serif\">"
+    );
+    // Convert <font weight="...">...</font>
+    safeText = safeText.replace(
+    /&lt;font weight="([^"]+)"&gt;/gi,
+    '<span style="font-weight:$1">'
+    );
+    // Convert <font transparency="...">...</font>
+    safeText = safeText.replace(
+    /&lt;font transparency="([^"]+)"&gt;/gi,
+    '<span style="opacity:$1">'
+    );
+    safeText = safeText.replace(/&lt;\/font&gt;/gi, "</span>");
+    
+    // Convert <size=...>...</size>
+    safeText = safeText.replace(
+    /&lt;size=(\d+)&gt;/gi,
+    (_, size) => `<span style="font-size:${size}px">`
+    );
+    safeText = safeText.replace(/&lt;\/size&gt;/gi, "</span>");
+    
+    // Convert <stroke color="...">...</stroke> (font outline)
+    safeText = safeText.replace(
+    /&lt;stroke color="([^"]+)"&gt;/gi,
+    (_, color) =>
+    `<span style="text-shadow: -1px -1px 0 ${color}, 1px -1px 0 ${color}, -1px 1px 0 ${color}, 1px 1px 0 ${color}">`
+    );
+    safeText = safeText.replace(
+    /&lt;\/stroke&gt;/gi,
+    "</span>"
+    );
+    
+    // Convert <mark color="...">...</mark> (highlight)
+    safeText = safeText.replace(
+    /&lt;mark color="([^"]+)"&gt;/gi,
+    '<span style="background-color:$1">'
+    );
+    safeText = safeText.replace(/&lt;\/mark&gt;/gi, "</span>");
+    safeText = safeText.replace(/&lt;!--[\s\S]*?--&gt;/g, "");
+    
+    safeText = safeText.replace(/&lt;!--.*?--&gt;/g, "</span>");
+    
+    // Replace newlines with <br>
+    safeText = safeText.replace(/\n/g, "<br>");
+    
+    return safeText;
+    }
+    
+    function updatePreview() {
+    const text = editor.value;
+    preview.innerHTML = convertRobloxToHTML(text);
+    }
+    
+    // Update preview on input
+    editor.addEventListener("input", updatePreview);
+    
+    // Initial preview update
+    updatePreview();
+    })();
+    </script>
+  </body>
+</html>

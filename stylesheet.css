@@ -17,6 +17,7 @@
 *::before,
 *::after {
     box-sizing: border-box;
+    transition: all 0.3s ease; /* Smooth transition for all elements */
 }
 
 body {
@@ -30,10 +31,16 @@ body {
     min-height: 100vh;
 }
 
+/* Animate header background color on hover for a subtle effect */
 header {
     background: var(--primary);
     color: white;
     text-align: center;
+    transition: background-color 0.5s ease;
+}
+
+header:hover {
+    background-color: #1f2f40; /* Slightly darker on hover */
 }
 
 main {
@@ -43,12 +50,18 @@ main {
     margin: 0 auto;
 }
 
+/* Animate footer background color on hover */
 footer {
     padding: 1rem;
     text-align: center;
     background: var(--secondary);
     color: white;
     font-size: 0.9rem;
+    transition: background-color 0.5s ease;
+}
+
+footer:hover {
+    background-color: #2c3e50; /* Slightly lighter on hover */
 }
 
 footer a {
@@ -64,18 +77,23 @@ a {
     cursor: pointer;
     color: inherit;
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 a:hover {
     text-decoration: underline;
+    color: var(--accent);
 }
 
+/* Card grid with animated gap */
 .card-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
+    transition: gap 0.3s ease;
 }
 
+/* Card with animated transform and shadow on hover */
 .card {
     background: white;
     border-radius: 8px;
@@ -86,32 +104,44 @@ a:hover {
     align-items: center;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease,
-        background-color 0.3s ease, border 0.3s ease;
+        background-color 0.3s ease, border 0.3s ease, outline 0.3s ease;
     border: 2px solid transparent;
     will-change: transform;
 }
 
+/* Animate card hover with scale, rotate, and shadow */
 .card:hover {
     transform: translateY(-8px) scale(1.02) rotateX(2deg) rotateY(2deg);
     box-shadow: 0 8px 16px rgba(0, 80, 80, 0.2), 0 0 20px rgba(0, 80, 80, 0.2);
     background-color: #f9f9f9;
     border-color: #005050;
+    outline: none; /* Remove outline on hover */
 }
 
+/* Animate icon color and size on hover if needed */
 .card-icon {
     font-size: 2rem;
     margin-bottom: 1rem;
     color: var(--accent);
+    transition: transform 0.3s ease, color 0.3s ease;
 }
 
+.card:hover .card-icon {
+    transform: scale(1.1);
+    color: #16a085;
+}
+
+/* Tag styles with transition for smooth appearance */
 .card-tags {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
     margin-top: 1rem;
     justify-content: center;
+    transition: all 0.3s ease;
 }
 
+/* Tag hover effect for a subtle animation */
 .tag {
     display: flex;
     align-items: center;
@@ -122,37 +152,58 @@ a:hover {
     padding: 0.3em 0.6em;
     border-radius: 999px;
     white-space: nowrap;
+    transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.tag i {
-    font-size: 0.85em;
+.tag:hover {
+    transform: scale(1.05);
+    background: #16a085;
 }
 
+/* Remove outline on text when hovering over card, with smooth transition */
+.card *:hover {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Author text with fade-in effect */
 .card-author {
     margin-top: 0.75rem;
     font-size: 0.75rem;
     color: #888;
     text-align: center;
+    opacity: 1;
+    transition: opacity 0.3s ease;
 }
 
+/* Form group styles with transition for smoothness */
 .form-group {
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
+    transition: all 0.3s ease;
 }
 
+/* Labels with transition for hover effects */
 label {
     font-weight: bold;
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    transition: color 0.3s ease;
 }
 
+/* Tooltip styles with fade-in effect */
 .tooltip {
     position: relative;
     cursor: pointer;
     color: var(--accent);
+    transition: color 0.3s ease;
+}
+
+.tooltip:hover {
+    color: #16a085;
 }
 
 .tooltip:hover::after {
@@ -168,8 +219,11 @@ label {
     white-space: nowrap;
     margin-top: 4px;
     z-index: 10;
+    opacity: 1;
+    transition: opacity 0.3s ease;
 }
 
+/* Output section with fade-in and scale effect */
 .output {
     margin-top: 1.5rem;
     background: white;
@@ -181,6 +235,7 @@ label {
     gap: 1rem;
     flex-wrap: wrap;
     word-break: break-word;
+    transition: all 0.3s ease;
 }
 
 .output a {
@@ -188,6 +243,7 @@ label {
     color: var(--accent);
     text-decoration: underline;
     font-weight: 600;
+    transition: color 0.3s ease;
 }
 
 button {
@@ -199,13 +255,15 @@ button {
     cursor: pointer;
     font-size: 1rem;
     margin-top: 1rem;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 button:hover {
     background-color: #16a085;
+    transform: scale(1.05);
 }
 
+/* Copy button with hover animation */
 .copy-btn {
     background: var(--accent);
     border: none;
@@ -215,13 +273,15 @@ button:hover {
     cursor: pointer;
     font-size: 0.9rem;
     flex-shrink: 0;
-    transition: background-color 0.2s ease;
+    transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .copy-btn:hover {
     background: #16a085;
+    transform: scale(1.1);
 }
 
+/* Commit container with fade-in effect */
 .commit-container {
     display: flex;
     gap: 2rem;
@@ -230,8 +290,10 @@ button:hover {
     padding: 0 1rem;
     height: 70vh;
     background: var(--background);
+    transition: all 0.3s ease;
 }
 
+/* Commit list with smooth scrolling */
 #commit-list {
     flex: 0 0 35%;
     list-style: none;
@@ -240,17 +302,25 @@ button:hover {
     border-right: 1px solid var(--secondary);
     overflow-y: auto;
     height: 100%;
+    transition: all 0.3s ease;
 }
 
+/* Commit list items with hover highlight */
 #commit-list li {
     padding: 0.6rem 0;
     border-bottom: 1px solid var(--background);
+    transition: background-color 0.3s ease;
+}
+
+#commit-list li:hover {
+    background-color: #f0f0f0;
 }
 
 #commit-list a {
     color: var(--text);
     text-decoration: none;
     display: block;
+    transition: color 0.3s ease;
 }
 
 #commit-list a:hover,
@@ -259,6 +329,7 @@ button:hover {
     font-weight: 600;
 }
 
+/* Commit details with fade-in and slide effect */
 #commit-details {
     flex: 1 1 60%;
     background: white;
@@ -268,24 +339,19 @@ button:hover {
     overflow-y: auto;
     height: 100%;
     display: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-#commit-details h2,
-#commit-details p {
-    margin-top: 0;
-    margin-bottom: 1rem;
+/* Show commit details with animation */
+#commit-details.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-#commit-details a {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-#commit-details a:hover {
-    text-decoration: underline;
-}
-
+/* Block styles with hover animation */
 #block {
     display: flex;
     align-items: center;
@@ -295,27 +361,36 @@ button:hover {
     border-radius: 10px;
     background-color: rgb(44, 44, 44);
     flex-grow: 0;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+#block:hover {
+    background-color: rgb(60, 60, 60);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Image inside block with transition */
 #block > img {
     width: 25px;
     height: 25px;
     flex-shrink: 0;
     margin-right: 10px;
     vertical-align: middle;
+    transition: transform 0.3s ease;
 }
 
+#block:hover > img {
+    transform: scale(1.1);
+}
+
+/* Input and button inside block with transition */
 #block input,
 #block button {
     vertical-align: middle;
+    transition: all 0.3s ease;
 }
 
-#block > * {
-    display: inline;
-    vertical-align: middle;
-    margin-right: 5px;
-}
-
+/* Placeholder measure with transition for smooth size change */
 #placeholderMeasure {
     position: absolute;
     visibility: hidden;
@@ -323,8 +398,10 @@ button:hover {
     font-family: "BuilderSans", sans-serif;
     height: 0;
     overflow: hidden;
+    transition: all 0.3s ease;
 }
 
+/* Input styles with animated focus */
 .block-input {
     background-color: rgb(27, 27, 27);
     font-family: "BuilderSans", sans-serif;
@@ -335,8 +412,16 @@ button:hover {
     border: none;
     border-radius: 0;
     color: white;
+    outline: none;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
+.block-input:focus {
+    box-shadow: 0 0 8px rgba(26, 188, 156, 0.7);
+    background-color: rgb(30, 30, 30);
+}
+
+/* Label input with transition */
 .label-input {
     background: none;
     color: white;
@@ -347,14 +432,18 @@ button:hover {
     text-align: center;
     height: 22px;
     line-height: 1;
+    transition: color 0.3s ease;
 }
 
+/* Input group with hover effects */
 .input-group {
     display: flex;
     align-items: center;
     height: 25px;
+    transition: all 0.3s ease;
 }
 
+/* Delete button with hover animation */
 .delete-button {
     display: inline;
     align-items: center;
@@ -365,24 +454,25 @@ button:hover {
     padding: 0;
     background: transparent;
     border: none;
+    transition: transform 0.3s ease;
 }
 
 .delete-button > img {
     width: 22px;
     height: 22px;
-}
-
-.input-group .delete-button {
-    display: none;
+    transition: transform 0.3s ease;
 }
 
 .input-group:hover .delete-button {
     display: inline;
+    transform: scale(1.1);
 }
 
+/* Icon selector with transition */
 #icon-selector {
     margin: 10px 0;
     font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 #icon-buttons {
@@ -390,6 +480,7 @@ button:hover {
     flex-wrap: wrap;
     gap: 6px;
     margin-top: 5px;
+    transition: all 0.3s ease;
 }
 
 .icon-button {
@@ -397,16 +488,17 @@ button:hover {
     border: none;
     padding: 4px;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.3s ease;
     aspect-ratio: 1;
     height: 32px;
-    margin: 0;
 }
 
 .icon-button:hover {
     transform: scale(1.1);
+    background-color: rgb(40, 40, 40);
 }
 
+/* Large input with transition */
 .large-input {
     width: 40vw;
     height: 40vh;
@@ -414,10 +506,19 @@ button:hover {
     border: none;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
     font-family: inherit;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
+.large-input:focus {
+    box-shadow: 0 0 15px rgba(26, 188, 156, 0.7);
+    outline: none;
+    transform: scale(1.02);
+}
+
+/* Formatting buttons with hover effects */
 #formatting-buttons {
     margin-bottom: 10px;
+    transition: all 0.3s ease;
 }
 
 #formatting-buttons > * {
@@ -426,4 +527,10 @@ button:hover {
     width: 40px;
     align-items: center;
     justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#formatting-buttons > *:hover {
+    background-color: #2c3e50;
+    transform: scale(1.1);
 }

@@ -297,7 +297,7 @@ button:hover {
     flex-grow: 0;
 }
 
-#block > i {
+#block > img {
     width: 25px;
     height: 25px;
     flex-shrink: 0;
@@ -367,7 +367,7 @@ button:hover {
     border: none;
 }
 
-.delete-button > i {
+.delete-button > img {
     width: 22px;
     height: 22px;
 }

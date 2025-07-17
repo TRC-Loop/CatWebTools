@@ -1,292 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Custom Blocks - CatWeb Tools</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link
-            rel="icon"
-            type="image/x-icon"
-            href="./static/images/favicon.ico"
-        />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        />
+  <head>
+    <meta charset="UTF-8" />
+    <title>Custom Blocks - CatWeb Tools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="./static/images/favicon.ico" />
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Custom Block Maker</h1>
+      <div class="description">Make your own custom Script-Blocks.</div>
+    </header>
+    <main>
+      <div id="block">
+        <img src="./static/images/8.png" width="32" height="32" />
+        <div class="input-group">
+          <input class="label-input" type="text" placeholder="Type text here..." />
+          <button class="delete-button">
+            <img src="./static/images/trash_icon.svg" />
+          </button>
+        </div>
+        <div class="input-group">
+          <input type="text" placeholder="<variable>" class="block-input" />
+          <button class="delete-button">
+            <img src="./static/images/trash_icon.svg" />
+          </button>
+        </div>
+        <div class="input-group">
+          <input class="label-input" type="text" placeholder="Type text here..." />
+          <button class="delete-button">
+            <img src="./static/images/trash_icon.svg" />
+          </button>
+        </div>
+        <div class="input-group">
+          <input type="text" placeholder="<any>" class="block-input" />
+          <button class="delete-button">
+            <img src="./static/images/trash_icon.svg" />
+          </button>
+        </div>
+        <span id="placeholderMeasure" aria-hidden="true"></span>
+      </div>
+      <div id="icon-selector">
+        <div>Select Block Icon:</div>
+        <div id="icon-buttons"></div>
+      </div>
 
-        <link rel="stylesheet" href="stylesheet.css" />
-    </head>
-    <body>
-        <header>
-            <h1>Custom Block Maker</h1>
-            <div class="description">Make your own custom Script-Blocks.</div>
-        </header>
-        <main>
-            <div id="block">
-                <img src="./static/images/8.png" width="32" height="32" />
-                <div class="input-group">
-                    <input
-                        class="label-input"
-                        type="text"
-                        placeholder="Type text here..."
-                    />
-                    <button class="delete-button">
-                      <i class="fa fa-trash-can">
-                    </button>
-                </div>
-                <div class="input-group">
-                    <input
-                        type="text"
-                        placeholder="<variable>"
-                        class="block-input"
-                    />
-                    <button class="delete-button">
-                      <i class="fa fa-trash-can">
-                    </button>
-                </div>
-                <div class="input-group">
-                    <input
-                        class="label-input"
-                        type="text"
-                        placeholder="Type text here..."
-                    />
-                    <button class="delete-button">
-                      <i class="fa fa-trash-can">
-                    </button>
-                </div>
-                <div class="input-group">
-                    <input
-                        type="text"
-                        placeholder="<any>"
-                        class="block-input"
-                    />
-                    <button class="delete-button">
-                      <i class="fa fa-trash-can">
-                    </button>
-                </div>
-                <span id="placeholderMeasure" aria-hidden="true"></span>
-            </div>
-            <div id="icon-selector">
-                <div>Select Block Icon:</div>
-                <div id="icon-buttons"></div>
-            </div>
+      <div id="buttons">
+        <button id="add-label" onclick="addLabel()">Add Label</button>
+        <button id="add-input" onclick="addInput()">Add Input</button>
+        <button id="generate-json" onclick="generateJson()">Generate JSON</button>
+      </div>
 
-            <div id="buttons">
-                <button id="add-label" onclick="addLabel()">Add Label</button>
-                <button id="add-input" onclick="addInput()">Add Input</button>
-                <button id="export-to-json" onclick="exportJson()">
-                    Export JSON
-                </button>
-            </div>
-        </main>
+      <div id="json-actions" style="display: none; margin-top: 10px;">
+        <button id="copy-json" onclick="copyJson()">Copy JSON</button>
+        <button id="download-json" onclick="downloadJson()">Download JSON</button>
+      </div>
+    </main>
 
-        <footer>
-            This site is open source.
-            <a href="https://github.com/TRC-Loop/CatWebTools" target="_blank"
-                >Improve this page</a
-            >. This page is not affiliated with Nexpay. | Version:
-            <script src="./static/version.js"></script>
-            <a href="changelog" target="_blank"> View Changelog</a>.
-        </footer>
+    <footer>
+      This site is open source.
+      <a href="https://github.com/TRC-Loop/CatWebTools" target="_blank">Improve this page</a>.
+      This page is not affiliated with Catweb. | Version:
+      <script src="./static/version.js"></script>
+      <a href="changelog" target="_blank"> View Changelog</a>.
+    </footer>
 
-        <script>
-            let inputs = document.getElementsByClassName("block-input");
-            let labelInputs = document.getElementsByClassName("label-input");
-            const addInputButton = document.getElementById("add-label");
-            const addLabelButton = document.getElementById("add-input");
-            const measure = document.getElementById("placeholderMeasure");
-            const block = document.getElementById("block");
+    <script>
+    let inputs = document.getElementsByClassName("block-input");
+    let labelInputs = document.getElementsByClassName("label-input");
+    const measure = document.getElementById("placeholderMeasure");
+    const block = document.getElementById("block");
 
-            function adjustInputWidths() {
-                Array.from(inputs).forEach((input) => {
-                    const value = input.value || input.placeholder;
-                    measure.textContent = value;
-                    const width = measure.offsetWidth;
-                    input.style.width = width + "px";
-                });
-                Array.from(labelInputs).forEach((input) => {
-                    const value = input.value || input.placeholder;
-                    measure.textContent = value;
-                    const width = measure.offsetWidth;
-                    input.style.width = width + 5 + "px";
-                });
-            }
+    // Global variable to store generated JSON
+    let generatedJson = "";
 
-            function addDeleteButtonFunctionality(button) {
-                button.addEventListener("click", function () {
-                    const group = button.closest(".input-group");
-                    if (group) {
-                        group.remove();
-                        adjustInputWidths();
-                    }
-                });
-            }
+    // Function to adjust input widths
+    function adjustInputWidths() {
+    Array.from(inputs).forEach((input) => {
+    const value = input.value || input.placeholder;
+    measure.textContent = value;
+    const width = measure.offsetWidth;
+    input.style.width = width + "px";
+    });
+    Array.from(labelInputs).forEach((input) => {
+    const value = input.value || input.placeholder;
+    measure.textContent = value;
+    const width = measure.offsetWidth;
+    input.style.width = width + 5 + "px";
+    });
+    }
 
-            document
-                .querySelectorAll(".delete-button")
-                .forEach(addDeleteButtonFunctionality);
+    // Function to add delete button functionality
+    function addDeleteButtonFunctionality(button) {
+    button.addEventListener("click", function () {
+    const group = button.closest(".input-group");
+    if (group) {
+    group.remove();
+    adjustInputWidths();
+    }
+    });
+    }
 
-            function addInput() {
-                const placeholderText = prompt(
-                    "Enter placeholder text for the new input. There will be <>'s around your input:",
-                    ""
-                );
-                if (placeholderText === null) return;
+    // Attach delete functionality to existing buttons
+    document.querySelectorAll(".delete-button").forEach(addDeleteButtonFunctionality);
 
-                const group = document.createElement("div");
-                group.className = "input-group";
+    // Function to add new input
+    function addInput() {
+    const placeholderText = prompt(
+    "Enter placeholder text for the new input. There will be <>'s around your input:",
+    ""
+    );
+    if (placeholderText === null) return;
 
-                const newInput = document.createElement("input");
-                newInput.className = "block-input";
-                newInput.type = "text";
-                newInput.placeholder = "<" + placeholderText + ">";
-                newInput.addEventListener("input", adjustInputWidths);
+    const group = document.createElement("div");
+    group.className = "input-group";
 
-                const delBtn = document.createElement("button");
-                delBtn.className = "delete-button";
-                delBtn.innerHTML = `<i class="fa fa-trash-can">`;
-                addDeleteButtonFunctionality(delBtn);
+    const newInput = document.createElement("input");
+    newInput.className = "block-input";
+    newInput.type = "text";
+    newInput.placeholder = "<" + placeholderText + ">";
+    newInput.addEventListener("input", adjustInputWidths);
 
-                group.appendChild(newInput);
-                group.appendChild(delBtn);
-                block.appendChild(group);
-                adjustInputWidths();
-            }
+    const delBtn = document.createElement("button");
+    delBtn.className = "delete-button";
+    delBtn.innerHTML = `<img src="./static/images/trash_icon.svg">`;
+    addDeleteButtonFunctionality(delBtn);
 
-            function addLabel() {
-                const group = document.createElement("div");
-                group.className = "input-group";
+    group.appendChild(newInput);
+    group.appendChild(delBtn);
+    block.appendChild(group);
+    adjustInputWidths();
+    }
 
-                const newInput = document.createElement("input");
-                newInput.className = "label-input";
-                newInput.type = "text";
-                newInput.placeholder = "Type text here...";
-                newInput.addEventListener("input", adjustInputWidths);
+    // Function to add new label
+    function addLabel() {
+    const group = document.createElement("div");
+    group.className = "input-group";
 
-                const delBtn = document.createElement("button");
-                delBtn.className = "delete-button";
-                delBtn.innerHTML = `<img src="./static/images/trash_icon.svg">`;
-                addDeleteButtonFunctionality(delBtn);
+    const newInput = document.createElement("input");
+    newInput.className = "label-input";
+    newInput.type = "text";
+    newInput.placeholder = "Type text here...";
+    newInput.addEventListener("input", adjustInputWidths);
 
-                group.appendChild(newInput);
-                group.appendChild(delBtn);
-                block.appendChild(group);
-                adjustInputWidths();
-            }
+    const delBtn = document.createElement("button");
+    delBtn.className = "delete-button";
+    delBtn.innerHTML = `<img src="./static/images/trash_icon.svg">`;
+    addDeleteButtonFunctionality(delBtn);
 
-            function exportJson() {
-                const blockChildren = block.querySelectorAll(".input-group");
+    group.appendChild(newInput);
+    group.appendChild(delBtn);
+    block.appendChild(group);
+    adjustInputWidths();
+    }
 
-                const iconMap = {
-                    "1.png": "0",
-                    "2.png": "3",
-                    "3.png": "24",
-                    "4.png": "8",
-                    "5.png": "58",
-                    "6.png": "4",
-                    "7.png": "5",
-                    "8.png": "11",
-                    "9.png": "32",
-                    "10.png": "68",
-                    "11.png": "84",
-                    "12.png": "34",
-                    "13.png": "42",
-                    "14.png": "54",
-                    "15.png": "63",
-                };
+    // Function to generate JSON
+    function generateJson() {
+    const blockChildren = block.querySelectorAll(".input-group");
 
-                const currentIconImg = block.querySelector("img");
-                const srcParts = currentIconImg.src.split("/");
-                const iconFilename = srcParts[srcParts.length - 1];
-                const iconId = iconMap[iconFilename] || null;
+    // Map for icon filenames to IDs
+    const iconMap = {
+    "1.png": "0",
+    "2.png": "3",
+    "3.png": "24",
+    "4.png": "8",
+    "5.png": "58",
+    "6.png": "4",
+    "7.png": "5",
+    "8.png": "11",
+    "9.png": "32",
+    "10.png": "68",
+    "11.png": "84",
+    "12.png": "34",
+    "13.png": "42",
+    "14.png": "54",
+    "15.png": "63",
+    };
 
-                const blockText = [];
-                blockChildren.forEach((group) => {
-                    const input = group.querySelector("input");
-                    if (!input) return;
+    // Get current icon filename
+    const currentIconImg = block.querySelector("img");
+    const srcParts = currentIconImg.src.split("/");
+    const iconFilename = srcParts[srcParts.length - 1];
+    const iconId = iconMap[iconFilename] || null;
 
-                    if (input.classList.contains("label-input")) {
-                        const value = input.value || input.placeholder;
-                        blockText.push(value);
-                    } else if (input.classList.contains("block-input")) {
-                        const placeholder = input.placeholder || "";
-                        const stripped = placeholder.substring(
-                            1,
-                            placeholder.length - 1
-                        );
-                        blockText.push({ l: stripped, t: "string" });
-                    }
-                });
+    const blockText = [];
+    // Loop through input groups
+    blockChildren.forEach((group) => {
+    const input = group.querySelector("input");
+    if (!input) return;
 
-                const blockObject = {
-                    id: iconId,
-                    text: blockText,
-                    globalid: "custom",
-                    t: 0,
-                };
+    if (input.classList.contains("label-input")) {
+    const value = input.value || input.placeholder;
+    blockText.push(value);
+    } else if (input.classList.contains("block-input")) {
+    const placeholder = input.placeholder || "";
+    const stripped = placeholder.substring(1, placeholder.length - 1);
+    blockText.push({ l: stripped, t: "string" });
+    }
+    });
 
-                const finalOutput = [
-                    {
-                        class: "script",
-                        content: [
-                            {
-                                y: "4838",
-                                x: "4816.9921875",
-                                globalid: "mx",
-                                id: "0",
-                                text: ["When website loaded..."],
-                                actions: [blockObject],
-                            },
-                        ],
-                        globalid: "custom",
-                    },
-                ];
+    // Build the action object
+    const blockObject = {
+    id: iconId,
+    text: blockText,
+    globalid: "custom",
+    t: 0,
+    };
 
-                const jsonOutput = JSON.stringify(finalOutput, null, 2);
-                console.log(jsonOutput);
+    // Final output structure
+    const finalOutput = [
+    {
+    class: "script",
+    content: [
+    {
+    y: "4838",
+    x: "4816.9921875",
+    globalid: "mx",
+    id: "0",
+    text: ["When website loaded..."],
+    actions: [blockObject],
+    },
+    ],
+    globalid: "custom",
+    },
+    ];
 
-                // Download JSON file
-                const blob = new Blob([jsonOutput], {
-                    type: "application/json",
-                });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "custom-script.json";
-                a.click();
-                URL.revokeObjectURL(url);
-            }
+    // Convert to JSON string
+    generatedJson = JSON.stringify(finalOutput, null, 2);
+    console.log(generatedJson);
 
-            // Initial adjustment on page load
-            adjustInputWidths();
+    // Show the copy/download buttons container
+    const jsonActionsDiv = document.getElementById("json-actions");
+    jsonActionsDiv.style.display = "block";
+    }
 
-            // Live update on input
-            Array.from(inputs).forEach((input) => {
-                input.addEventListener("input", adjustInputWidths);
-            });
-            Array.from(labelInputs).forEach((input) => {
-                input.addEventListener("input", adjustInputWidths);
-            });
+    // Function to copy JSON to clipboard
+    function copyJson() {
+    if (!generatedJson) {
+    alert("Please generate JSON first!");
+    return;
+    }
+    navigator.clipboard
+    .writeText(generatedJson)
+    .then(() => alert("JSON copied to clipboard!"))
+    .catch((err) => console.error("Failed to copy JSON:", err));
+    }
 
-            function createIconButtons() {
-                const iconButtonsContainer =
-                    document.getElementById("icon-buttons");
+    // Function to download JSON as file
+    function downloadJson() {
+    if (!generatedJson) {
+    alert("Please generate JSON first!");
+    return;
+    }
+    const blob = new Blob([generatedJson], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "custom-script.json";
+    a.click();
+    URL.revokeObjectURL(url);
+    }
 
-                for (let i = 1; i <= 15; i++) {
-                    const button = document.createElement("button");
-                    button.className = "icon-button";
-                    button.innerHTML = `<img src="./static/images/${i}.png" width="24" height="24" alt="Icon ${i}">`;
+    // Initial adjustment on page load
+    adjustInputWidths();
 
-                    button.addEventListener("click", () => {
-                        const blockImg = block.querySelector("img");
-                        blockImg.src = `./static/images/${i}.png`;
-                    });
+    // Live update on input
+    Array.from(inputs).forEach((input) => {
+    input.addEventListener("input", adjustInputWidths);
+    });
+    Array.from(labelInputs).forEach((input) => {
+    input.addEventListener("input", adjustInputWidths);
+    });
 
-                    iconButtonsContainer.appendChild(button);
-                }
-            }
-
-            createIconButtons();
-        </script>
-    </body>
+    // Function to create icon buttons
+    function createIconButtons() {
+    const iconButtonsContainer = document.getElementById("icon-buttons");
+    for (let i = 1; i <= 15; i++) {
+    const button = document.createElement("button");
+    button.className = "icon-button";
+    button.innerHTML = `<img src="./static/images/${i}.png" width="24" height="24" alt="Icon ${i}">`;
+    button.addEventListener("click", () => {
+    const blockImg = block.querySelector("img");
+    blockImg.src = `./static/images/${i}.png`;
+    });
+    iconButtonsContainer.appendChild(button);
+    }
+    }
+    createIconButtons();
+    </script>
+  </body>
 </html>
